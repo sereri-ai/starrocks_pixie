@@ -33,6 +33,7 @@ import com.aliyun.odps.utils.StringUtils;
 import com.starrocks.jni.connector.ColumnType;
 import com.starrocks.jni.connector.ConnectorScanner;
 import com.starrocks.utils.loader.ThreadContextClassLoader;
+import io.github.pixee.security.ObjectInputFilters;
 import org.apache.arrow.vector.FieldVector;
 import org.apache.arrow.vector.VectorSchemaRoot;
 import org.apache.arrow.vector.types.pojo.Field;
@@ -220,6 +221,7 @@ public class OdpsSplitScanner extends ConnectorScanner {
         byte[] serializedBytes = Base64.getDecoder().decode(serializedString);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(serializedBytes);
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        ObjectInputFilters.enableObjectFilterIfUnprotected(objectInputStream);
         return objectInputStream.readObject();
     }
 }
