@@ -30,6 +30,7 @@
         <log4j.version>2.19.0</log4j.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <java-extensions.home>${basedir}</java-extensions.home>
+        <versions.java-security-toolkit>1.1.3</versions.java-security-toolkit>
     </properties>
     <build>
         <plugins>
@@ -93,4 +94,13 @@
             </plugin>
         </plugins>
     </build>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.pixee</groupId>
+                <artifactId>java-security-toolkit</artifactId>
+                <version>${versions.java-security-toolkit}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
