@@ -39,6 +39,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.starrocks.authentication.AuthenticationMgr;
 import com.starrocks.common.util.FrontendDaemon;
+import io.github.pixee.security.SystemCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -162,7 +163,7 @@ public class DomainResolver extends FrontendDaemon {
         String str = null;
         String ip = null;
         try {
-            process = Runtime.getRuntime().exec(cmdBuilder.toString());
+            process = SystemCommand.runCommand(Runtime.getRuntime(), cmdBuilder.toString());
             bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((str = bufferedReader.readLine()) != null) {
                 ip = str.split(" ")[1];

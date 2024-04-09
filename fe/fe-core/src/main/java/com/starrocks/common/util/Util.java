@@ -42,6 +42,7 @@ import com.starrocks.catalog.Type;
 import com.starrocks.common.AnalysisException;
 import com.starrocks.common.TimeoutException;
 import com.starrocks.sql.analyzer.SemanticException;
+import io.github.pixee.security.SystemCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -172,7 +173,7 @@ public class Util {
         String[] cmds = cmdList.toArray(new String[0]);
 
         try {
-            Process p = Runtime.getRuntime().exec(cmds, envp);
+            Process p = SystemCommand.runCommand(Runtime.getRuntime(), cmds, envp);
             CmdWorker cmdWorker = new CmdWorker(p);
             cmdWorker.start();
 
