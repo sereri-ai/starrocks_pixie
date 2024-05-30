@@ -14,6 +14,8 @@
 
 package com.starrocks.udf;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -33,7 +35,7 @@ public class UDFClassLoader extends URLClassLoader {
     private static final int BATCH_EVALUATE = 2;
 
     public UDFClassLoader(String udfPath) throws IOException {
-        super(new URL[] {new URL("file://" + udfPath)});
+        super(new URL[] {Urls.create("file://" + udfPath, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS)});
         if (System.getSecurityManager() == null && System.getProperties().get("java.security.policy") != null) {
             synchronized (UDFClassLoader.class) {
                 if (System.getSecurityManager() == null) {

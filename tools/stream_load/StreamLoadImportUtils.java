@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -163,7 +165,7 @@ public class StreamLoadImportUtils {
     }
 
     private static HttpURLConnection getConnection(String loadUrl) throws IOException {
-        URL url = new URL(loadUrl);
+        URL url = Urls.create(loadUrl, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setDoOutput(true);
         conn.setDoInput(true);
