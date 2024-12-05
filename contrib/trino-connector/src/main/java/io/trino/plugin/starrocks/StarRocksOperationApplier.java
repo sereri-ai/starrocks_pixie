@@ -25,6 +25,8 @@ import com.starrocks.data.load.stream.http.StreamLoadEntity;
 import com.starrocks.data.load.stream.properties.StreamLoadProperties;
 import com.starrocks.data.load.stream.properties.StreamLoadTableProperties;
 import io.airlift.log.Logger;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import io.trino.spi.TrinoException;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -208,7 +210,7 @@ public final class StarRocksOperationApplier
     private boolean testHttpConnection(String host)
     {
         try {
-            URL url = new URL(host);
+            URL url = Urls.create(host, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setConnectTimeout(properties.getConnectTimeout());
             connection.connect();

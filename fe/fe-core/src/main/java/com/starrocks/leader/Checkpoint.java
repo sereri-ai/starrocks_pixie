@@ -46,6 +46,8 @@ import com.starrocks.persist.Storage;
 import com.starrocks.server.GlobalStateMgr;
 import com.starrocks.staros.StarMgrServer;
 import com.starrocks.system.Frontend;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -255,7 +257,7 @@ public class Checkpoint extends FrontendDaemon {
                  * any non-master node's current replayed journal id. otherwise,
                  * this lagging node can never get the deleted journal.
                  */
-                idURL = new URL("http://" + NetUtils.getHostPortInAccessibleFormat(host, port) + "/journal_id?prefix=" + journal.getPrefix());
+                idURL = Urls.create("http://" + NetUtils.getHostPortInAccessibleFormat(host, port) + "/journal_id?prefix=" + journal.getPrefix(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                 conn = (HttpURLConnection) idURL.openConnection();
                 conn.setConnectTimeout(CONNECT_TIMEOUT_SECOND * 1000);
                 conn.setReadTimeout(READ_TIMEOUT_SECOND * 1000);

@@ -21,6 +21,8 @@ import com.starrocks.connector.Connector;
 import com.starrocks.connector.ConnectorContext;
 import com.starrocks.connector.ConnectorMetadata;
 import com.starrocks.connector.exception.StarRocksConnectorException;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,7 +71,7 @@ public class JDBCConnector implements Connector {
             return;
         }
         try {
-            URL url = new URL(properties.get(JDBCResource.DRIVER_URL));
+            URL url = Urls.create(properties.get(JDBCResource.DRIVER_URL), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             URLConnection urlConnection = url.openConnection();
             InputStream inputStream = urlConnection.getInputStream();
 

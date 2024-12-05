@@ -21,6 +21,8 @@ import com.google.gson.annotations.SerializedName;
 import com.starrocks.common.DdlException;
 import com.starrocks.common.FeConstants;
 import com.starrocks.common.proc.BaseProcResult;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.InputStream;
@@ -83,7 +85,7 @@ public class JDBCResource extends Resource {
             return;
         }
         try {
-            URL url = new URL(getProperty(DRIVER_URL));
+            URL url = Urls.create(getProperty(DRIVER_URL), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             URLConnection urlConnection = url.openConnection();
             InputStream inputStream = urlConnection.getInputStream();
 
