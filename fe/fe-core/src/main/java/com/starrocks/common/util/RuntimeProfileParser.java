@@ -16,6 +16,7 @@ package com.starrocks.common.util;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.starrocks.thrift.TUnit;
+import io.github.pixee.security.BoundedLineReader;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -56,7 +57,7 @@ public class RuntimeProfileParser {
         RuntimeProfile root = null;
         try {
             String line;
-            while ((line = bufferedReader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(bufferedReader, 5_000_000)) != null) {
                 int curIndent = getIndentWidth(line);
                 String item = line.substring(curIndent);
                 if (StringUtils.isBlank(item)) {

@@ -42,6 +42,7 @@ import com.starrocks.sql.parser.SqlParser;
 import com.starrocks.thrift.TExplainLevel;
 import com.starrocks.utframe.StarRocksAssert;
 import com.starrocks.utframe.UtFrameUtils;
+import io.github.pixee.security.BoundedLineReader;
 import kotlin.text.Charsets;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -358,7 +359,7 @@ public class PlanTestNoneDBBase {
 
         Pattern regex = Pattern.compile("\\[plan-(\\d+)]");
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while ((tempStr = reader.readLine()) != null) {
+            while ((tempStr = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 if (tempStr.startsWith("/*")) {
                     isComment = true;
                     comment.append(tempStr).append("\n");

@@ -41,6 +41,7 @@ import com.starrocks.catalog.FakeGlobalStateMgr;
 import com.starrocks.catalog.GlobalStateMgrTestUtil;
 import com.starrocks.common.DdlException;
 import com.starrocks.server.GlobalStateMgr;
+import io.github.pixee.security.BoundedLineReader;
 import org.junit.BeforeClass;
 
 import java.io.BufferedReader;
@@ -77,7 +78,7 @@ public class EsTestCase {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         StringBuilder jsonStr = new StringBuilder();
         String line = "";
-        while ((line = br.readLine()) != null) {
+        while ((line = BoundedLineReader.readLine(br, 5_000_000)) != null) {
             jsonStr.append(line);
         }
         br.close();

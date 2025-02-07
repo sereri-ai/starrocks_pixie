@@ -30,6 +30,7 @@ import com.starrocks.sql.plan.ExecPlan;
 import com.starrocks.thrift.TExplainLevel;
 import com.starrocks.utframe.StarRocksAssert;
 import com.starrocks.utframe.UtFrameUtils;
+import io.github.pixee.security.BoundedLineReader;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -250,7 +251,7 @@ public class TrinoTestBase {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             int nth = 0;
-            while ((tempStr = reader.readLine()) != null) {
+            while ((tempStr = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 if (tempStr.startsWith("/*")) {
                     isComment = true;
                     comment.append(tempStr).append("\n");

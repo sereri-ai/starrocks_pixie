@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -43,7 +44,7 @@ public class StreamLoadImportUtils {
         StringBuilder stringBuilder = new StringBuilder();
         String line;
         int count = queueSize;
-        while ((line = reader.readLine()) != null) {
+        while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
             stringBuilder.append(line).append("\n");
             count--;
             if (count == 0) {

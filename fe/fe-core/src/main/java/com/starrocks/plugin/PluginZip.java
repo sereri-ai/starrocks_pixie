@@ -39,6 +39,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.starrocks.common.UserException;
 import com.starrocks.common.util.Util;
+import io.github.pixee.security.BoundedLineReader;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -141,7 +142,7 @@ class PluginZip {
         if (Strings.isNullOrEmpty(expectedChecksum)) {
             try (InputStream in = getInputStreamFromUrl(source + ".md5")) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
-                expectedChecksum = br.readLine();
+                expectedChecksum = BoundedLineReader.readLine(br, 5_000_000);
             } catch (IOException e) {
                 throw new UserException(e.getMessage() +
                         ". you should set md5sum in plugin properties or provide a md5 URI to check plugin file");
