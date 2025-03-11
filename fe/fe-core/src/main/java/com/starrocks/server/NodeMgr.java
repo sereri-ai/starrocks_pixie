@@ -73,6 +73,8 @@ import com.starrocks.thrift.TSetConfigRequest;
 import com.starrocks.thrift.TSetConfigResponse;
 import com.starrocks.thrift.TStatus;
 import com.starrocks.thrift.TStatusCode;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -393,8 +395,8 @@ public class NodeMgr {
                     isVersionFileChanged = true;
                 }
                 try {
-                    URL idURL = new URL("http://" + NetUtils.getHostPortInAccessibleFormat(
-                            rightHelperNode.first, Config.http_port) + "/check");
+                    URL idURL = Urls.create("http://" + NetUtils.getHostPortInAccessibleFormat(
+                            rightHelperNode.first, Config.http_port) + "/check", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                     HttpURLConnection conn = null;
                     conn = (HttpURLConnection) idURL.openConnection();
                     conn.setConnectTimeout(2 * 1000);
@@ -488,8 +490,8 @@ public class NodeMgr {
                 String accessibleHostPort = NetUtils.getHostPortInAccessibleFormat(helperNode.first, Config.http_port);
                 String encodedAddress = URLEncoder.encode(selfNode.first,
                         StandardCharsets.UTF_8.toString());
-                URL url = new URL("http://" + accessibleHostPort + "/role?host=" + encodedAddress +
-                        "&port=" + selfNode.second);
+                URL url = Urls.create("http://" + accessibleHostPort + "/role?host=" + encodedAddress +
+                        "&port=" + selfNode.second, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                 HttpURLConnection conn = null;
                 conn = (HttpURLConnection) url.openConnection();
                 if (conn.getResponseCode() != 200) {
@@ -695,7 +697,7 @@ public class NodeMgr {
         localImageVersion = storage.getImageJournalId();
 
         String accessibleHostPort = NetUtils.getHostPortInAccessibleFormat(helperNode.first, Config.http_port);
-        URL infoUrl = new URL("http://" + accessibleHostPort + "/info?subdir=" + subDir);
+        URL infoUrl = Urls.create("http://" + accessibleHostPort + "/info?subdir=" + subDir, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         StorageInfo info = getStorageInfo(infoUrl);
         long version = info.getImageJournalId();
         if (version > localImageVersion) {

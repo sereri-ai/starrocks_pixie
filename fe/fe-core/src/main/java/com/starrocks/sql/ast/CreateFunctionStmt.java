@@ -35,6 +35,8 @@ import com.starrocks.common.FeConstants;
 import com.starrocks.qe.ConnectContext;
 import com.starrocks.sql.parser.NodePosition;
 import com.starrocks.thrift.TFunctionBinaryType;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.IOException;
@@ -214,7 +216,7 @@ public class CreateFunctionStmt extends DdlStmt {
 
     public static class UDFInternalClassLoader extends URLClassLoader {
         public UDFInternalClassLoader(String udfPath) throws IOException {
-            super(new URL[] {new URL("jar:" + udfPath + "!/")});
+            super(new URL[] {Urls.create("jar:" + udfPath + "!/", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS)});
         }
     }
 
@@ -388,7 +390,7 @@ public class CreateFunctionStmt extends DdlStmt {
             checksum = "";
             return;
         }
-        URL url = new URL(objectFile);
+        URL url = Urls.create(objectFile, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         URLConnection urlConnection = url.openConnection();
         InputStream inputStream = urlConnection.getInputStream();
 
