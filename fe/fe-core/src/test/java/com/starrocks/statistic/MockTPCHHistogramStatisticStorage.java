@@ -29,6 +29,7 @@ import com.starrocks.sql.optimizer.statistics.Bucket;
 import com.starrocks.sql.optimizer.statistics.ColumnStatistic;
 import com.starrocks.sql.optimizer.statistics.Histogram;
 import com.starrocks.sql.optimizer.statistics.StatisticStorage;
+import io.github.pixee.security.BoundedLineReader;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.junit.Assert;
 
@@ -285,7 +286,7 @@ public class MockTPCHHistogramStatisticStorage implements StatisticStorage {
         String tempStr;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder histogramString = new StringBuilder();
-            while ((tempStr = reader.readLine()) != null) {
+            while ((tempStr = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 histogramString.append(tempStr);
             }
             List<Bucket> buckets = convertBuckets(histogramString.toString(), type, scala);

@@ -14,6 +14,7 @@
 package com.starrocks.common.util;
 
 import com.starrocks.thrift.TUnit;
+import io.github.pixee.security.BoundedLineReader;
 import org.junit.Assert;
 import org.junit.Test;
 import org.sparkproject.guava.collect.Maps;
@@ -46,7 +47,7 @@ public class RuntimeProfileParserTest {
         BufferedReader reader = new BufferedReader(new StringReader(content));
         String line;
         try {
-            while ((line = reader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 lineCounter.merge(line, 1, Integer::sum);
             }
         } catch (IOException e) {

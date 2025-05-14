@@ -40,6 +40,7 @@ import com.starrocks.http.ActionController;
 import com.starrocks.http.BaseRequest;
 import com.starrocks.http.BaseResponse;
 import com.starrocks.http.IllegalArgException;
+import io.github.pixee.security.BoundedLineReader;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.apache.commons.text.StringEscapeUtils;
@@ -95,7 +96,7 @@ public class QueryProfileAction extends WebBaseAction {
         BufferedReader reader = new BufferedReader(new StringReader(queryProfileStr));
         String line;
         try {
-            while ((line = reader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 if (line.contains(ProfileManager.SQL_STATEMENT)) {
                     buffer.append(escapeHtmlInPreTag(line)).append("\n");
                 } else {

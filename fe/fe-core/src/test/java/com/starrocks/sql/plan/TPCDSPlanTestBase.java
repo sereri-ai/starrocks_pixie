@@ -17,6 +17,7 @@ package com.starrocks.sql.plan;
 import com.google.common.collect.ImmutableMap;
 import com.starrocks.catalog.OlapTable;
 import com.starrocks.planner.TablePruningTestBase;
+import io.github.pixee.security.BoundedLineReader;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 
@@ -112,7 +113,7 @@ public class TPCDSPlanTestBase extends PlanTestBase {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String str;
-            while ((str = reader.readLine()) != null) {
+            while ((str = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 sb.append(str).append("\n");
             }
         } catch (IOException e) {

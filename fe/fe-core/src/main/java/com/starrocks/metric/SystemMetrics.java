@@ -36,6 +36,7 @@ package com.starrocks.metric;
 
 import com.google.common.collect.Maps;
 import com.starrocks.common.FeConstants;
+import io.github.pixee.security.BoundedLineReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,7 +81,7 @@ public class SystemMetrics {
                 BufferedReader br = new BufferedReader(fileReader)) {
             String line = null;
             boolean found = false;
-            while ((line = br.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(br, 5_000_000)) != null) {
                 if (line.startsWith("Tcp: ")) {
                     found = true;
                     break;
@@ -99,7 +100,7 @@ public class SystemMetrics {
             }
 
             // read the metrics of TCP
-            if ((line = br.readLine()) == null) {
+            if ((line = BoundedLineReader.readLine(br, 5_000_000)) == null) {
                 throw new Exception("failed to read metrics of TCP");
             }
 

@@ -38,6 +38,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.starrocks.common.Config;
+import io.github.pixee.security.BoundedLineReader;
 import org.apache.hadoop.yarn.api.records.FinalApplicationStatus;
 import org.apache.hadoop.yarn.api.records.YarnApplicationState;
 import org.apache.logging.log4j.LogManager;
@@ -130,7 +131,7 @@ public class SparkLauncherMonitor {
             long startTime = System.currentTimeMillis();
             try {
                 outReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                while (!isStop && (line = outReader.readLine()) != null) {
+                while (!isStop && (line = BoundedLineReader.readLine(outReader, 5_000_000)) != null) {
                     if (outputStream != null) {
                         outputStream.write((line + "\n").getBytes());
                     }

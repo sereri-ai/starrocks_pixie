@@ -30,6 +30,7 @@ import com.starrocks.system.BackendCoreStat;
 import com.starrocks.thrift.TExplainLevel;
 import com.starrocks.utframe.StarRocksAssert;
 import com.starrocks.utframe.UtFrameUtils;
+import io.github.pixee.security.BoundedLineReader;
 import mockit.Mock;
 import mockit.MockUp;
 import org.junit.AfterClass;
@@ -100,7 +101,7 @@ public class ReplayFromDumpTestBase {
         String tempStr;
         boolean hasModelContent = false;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while ((tempStr = reader.readLine()) != null) {
+            while ((tempStr = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 if (tempStr.equals("[" + model + "]")) {
                     hasModelContent = true;
                     continue;
@@ -149,7 +150,7 @@ public class ReplayFromDumpTestBase {
         StringBuilder sb = new StringBuilder();
         String tempStr;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while ((tempStr = reader.readLine()) != null) {
+            while ((tempStr = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 sb.append(tempStr);
             }
         } catch (IOException e) {

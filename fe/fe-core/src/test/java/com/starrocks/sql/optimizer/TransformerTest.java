@@ -23,6 +23,7 @@ import com.starrocks.sql.optimizer.transformer.LogicalPlan;
 import com.starrocks.sql.optimizer.transformer.RelationTransformer;
 import com.starrocks.utframe.StarRocksAssert;
 import com.starrocks.utframe.UtFrameUtils;
+import io.github.pixee.security.BoundedLineReader;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -175,7 +176,7 @@ public class TransformerTest {
             String tempStr;
 
             boolean comment = false;
-            while ((tempStr = reader.readLine()) != null) {
+            while ((tempStr = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 if (tempStr.startsWith("/*")) {
                     comment = true;
                 }

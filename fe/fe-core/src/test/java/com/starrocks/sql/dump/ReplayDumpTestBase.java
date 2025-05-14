@@ -20,6 +20,7 @@ import com.starrocks.qe.ConnectContext;
 import com.starrocks.sql.optimizer.dump.QueryDumpInfo;
 import com.starrocks.thrift.TExplainLevel;
 import com.starrocks.utframe.UtFrameUtils;
+import io.github.pixee.security.BoundedLineReader;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -41,7 +42,7 @@ public class ReplayDumpTestBase {
         StringBuilder sb = new StringBuilder();
         String tempStr;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while ((tempStr = reader.readLine()) != null) {
+            while ((tempStr = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 sb.append(tempStr);
             }
         } catch (IOException e) {
@@ -56,7 +57,7 @@ public class ReplayDumpTestBase {
         StringBuilder sb = new StringBuilder();
         String tempStr;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while ((tempStr = reader.readLine()) != null) {
+            while ((tempStr = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 sb.append(tempStr);
             }
         } catch (IOException e) {
@@ -72,7 +73,7 @@ public class ReplayDumpTestBase {
         StringBuilder sb = new StringBuilder();
         String tempStr;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            while ((tempStr = reader.readLine()) != null) {
+            while ((tempStr = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 sb.append(tempStr);
                 sb.append("\n");
             }

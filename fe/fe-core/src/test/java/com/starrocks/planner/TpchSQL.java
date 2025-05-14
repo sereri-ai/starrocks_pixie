@@ -14,6 +14,7 @@
 
 package com.starrocks.planner;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -29,7 +30,7 @@ public class TpchSQL {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String str;
-            while ((str = reader.readLine()) != null) {
+            while ((str = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 sb.append(str).append("\n");
             }
         } catch (IOException e) {

@@ -42,6 +42,7 @@ import com.starrocks.catalog.Type;
 import com.starrocks.common.AnalysisException;
 import com.starrocks.common.TimeoutException;
 import com.starrocks.sql.analyzer.SemanticException;
+import io.github.pixee.security.BoundedLineReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -133,12 +134,12 @@ public class Util {
             String line = null;
             try {
                 outReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                while ((line = outReader.readLine()) != null) {
+                while ((line = BoundedLineReader.readLine(outReader, 5_000_000)) != null) {
                     outBuffer.append(line + '\n');
                 }
 
                 errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                while ((line = errReader.readLine()) != null) {
+                while ((line = BoundedLineReader.readLine(errReader, 5_000_000)) != null) {
                     errBuffer.append(line + '\n');
                 }
 
@@ -355,7 +356,7 @@ public class Util {
             BufferedReader br = new BufferedReader(new InputStreamReader(stream));
 
             String line;
-            while ((line = br.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(br, 5_000_000)) != null) {
                 sb.append(line);
             }
         } catch (Exception e) {
