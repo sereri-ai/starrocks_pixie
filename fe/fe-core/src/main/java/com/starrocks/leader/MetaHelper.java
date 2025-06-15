@@ -41,6 +41,8 @@ import com.starrocks.common.io.IOUtils;
 import com.starrocks.journal.bdbje.BDBEnvironment;
 import com.starrocks.monitor.unit.ByteSizeValue;
 import com.starrocks.server.GlobalStateMgr;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -94,7 +96,7 @@ public class MetaHelper {
     // download file from remote node
     public static void getRemoteFile(String urlStr, int timeout, OutputStream out)
             throws IOException {
-        URL url = new URL(urlStr);
+        URL url = Urls.create(urlStr, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         HttpURLConnection conn = null;
 
         try {

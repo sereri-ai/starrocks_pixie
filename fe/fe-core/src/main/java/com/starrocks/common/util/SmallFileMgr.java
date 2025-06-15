@@ -53,6 +53,8 @@ import com.starrocks.persist.metablock.SRMetaBlockWriter;
 import com.starrocks.server.GlobalStateMgr;
 import com.starrocks.sql.ast.CreateFileStmt;
 import com.starrocks.sql.ast.DropFileStmt;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
@@ -327,7 +329,7 @@ public class SmallFileMgr implements Writable {
     private SmallFile downloadAndCheck(long dbId, String catalog, String fileName,
                                        String downloadUrl, String md5sum, boolean saveContent) throws DdlException {
         try {
-            URL url = new URL(downloadUrl);
+            URL url = Urls.create(downloadUrl, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             // get file length
             URLConnection urlConnection = url.openConnection();
             if (urlConnection instanceof HttpURLConnection) {

@@ -27,6 +27,8 @@ import com.starrocks.common.ErrorReport;
 import com.starrocks.qe.ConnectContext;
 import com.starrocks.sql.ast.AstVisitor;
 import com.starrocks.sql.ast.ShowLoadWarningsStmt;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,7 +82,7 @@ public class ShowLoadWarningsStmtAnalyzer {
                         "Can not set database, where or limit clause if getting error log from url");
             }
             try {
-                URL url = new URL(rawUrl);
+                URL url = Urls.create(rawUrl, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                 statement.setUrl(url);
             } catch (MalformedURLException e) {
                 ErrorReport.reportSemanticException(ErrorCode.ERR_COMMON_ERROR, "Invalid url: " + e.getMessage());

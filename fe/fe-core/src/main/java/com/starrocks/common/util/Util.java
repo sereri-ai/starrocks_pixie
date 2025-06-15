@@ -42,6 +42,8 @@ import com.starrocks.catalog.Type;
 import com.starrocks.common.AnalysisException;
 import com.starrocks.common.TimeoutException;
 import com.starrocks.sql.analyzer.SemanticException;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -343,7 +345,7 @@ public class Util {
         StringBuilder sb = new StringBuilder();
         InputStream stream = null;
         try {
-            URL url = new URL(urlStr);
+            URL url = Urls.create(urlStr, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             URLConnection conn = url.openConnection();
             if (encodedAuthInfo != null) {
                 conn.setRequestProperty("Authorization", "Basic " + encodedAuthInfo);
@@ -433,7 +435,7 @@ public class Util {
     // If no auth info, pass a null.
     public static InputStream getInputStreamFromUrl(String urlStr, String encodedAuthInfo, int connectTimeoutMs,
                                                     int readTimeoutMs) throws IOException {
-        URL url = new URL(urlStr);
+        URL url = Urls.create(urlStr, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         URLConnection conn = url.openConnection();
         if (encodedAuthInfo != null) {
             conn.setRequestProperty("Authorization", "Basic " + encodedAuthInfo);
